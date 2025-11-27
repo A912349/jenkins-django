@@ -1,14 +1,26 @@
 pipeline {
     agent {
         docker {
-            image 'python:latest'
+            image 'python:3.12'
             args '-u root'
         }
     }
+
     stages {
-        stage("Hello") {
+        stage('Install dependencies') {
             steps {
-                sh 'echo Hello_World'
+                sh '''
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Django tests') {
+            steps {
+                sh '''
+                    python manage.py test
+                '''
             }
         }
     }
